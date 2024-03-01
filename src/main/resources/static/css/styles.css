@@ -1,0 +1,25 @@
+.sidebar-cart {
+    width: 400px;
+    min-width: 400px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    overflow:auto !important;
+    right: -400px;
+    z-index: 9000;
+    transition: 0.2s ease;
+    background-color: white;
+}
+
+.open-cart{
+    right: 0 !important;
+}
+
+.icon-button {
+    font-size: 22px;
+    border-radius: 50%;
+}
+
+.icon-button:hover {
+    cursor: pointer;
+}

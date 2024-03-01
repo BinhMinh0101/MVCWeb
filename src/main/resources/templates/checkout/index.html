@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{fragments/header :: header}">
+    <meta charset="utf-8"/>
+    <title>Vegetable Shop</title>
+</head>
+<body style="background-color: #eeeeee;">
+<!-- Navigation-->
+<nav th:replace="~{fragments/navigation :: navigation}">
+</nav>
+
+
+<!-- Section-->
+<section class="py-5" style="min-height: 1000px;">
+    <form th:action="@{/checkout}" class="container px-4" method="post">
+        <div class="row">
+            <div class="col-8 shadow-sm bg-white">
+
+                <div th:each="orderDetail : ${orderDetails}" class="card border-0 mb-3" style="max-height: 200px;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img th:src="@{${orderDetail.getVegetable().getImage()}}"
+                                 src="..."
+                                 style="height: 175px;"
+                                 class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <!-- Left -->
+                                    <div class="col-auto">
+                                        <h5 th:utext="${orderDetail.getVegetable().getVegetableName()}" class="card-title">Bắp cải xanh</h5>
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-auto">
+                                                <label class="col-form-label">
+                                                    <span class="fw-semibold">Số lượng: </span>
+                                                    <span th:utext="${orderDetail.quantity}"></span>
+                                                    <span th:utext="${orderDetail.getVegetable().getUnit()}">kg</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <h5 class="card-text pt-2">
+                                            Đơn giá: <span th:utext="${orderDetail.getVegetable().getPriceFormat()}"></span>đ
+                                        </h5>
+                                    </div>
+                                    <!-- Right -->
+                                    <div class="col-auto d-flex flex-column">
+                                        <a th:href="@{/cart/remove-item(vegetableId=${orderDetail.getVegetable().getVegetableID()})}" type="button" class="btn btn-outline-danger">
+                                            <i class="bi bi-trash3-fill"></i>
+                                            Xóa
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+
+            </div>
+
+            <!-- Right   -->
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Chi tiết thanh toán</h5>
+                        <div class="d-flex justify-content-between">
+                            <p class="card-text">Tổng tiền hàng</p>
+                            <p th:utext="${sumPrice}" class="card-text">180.000đ</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="card-text">Tổng tiền phí vận chuyển</p>
+                            <p class="card-text">0đ</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <p class="card-text">Tổng thanh toán</p>
+                            <p th:utext="${sumPrice}" class="card-text">180.000đ</p>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Thanh toán</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+</section>
+
+
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">
+            Copyright &copy; Your Website 2023
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{fragments/header :: header}">
+    <meta charset="utf-8"/>
+    <title>Vegetable Shop</title>
+</head>
+<body>
+<!-- Navigation-->
+<nav th:replace="~{fragments/navigation :: navigation}">
+</nav>
+<!-- Section-->
+<section class="py-5" style="min-height: 1000px;">
+    <div class="row">
+        <div class="col-12 col-md-3 ps-md-5">
+            <div class="container mt-5 px-4 px-lg-2">
+                <div class="d-flex flex-column justify-content-center border border-secondary-subtle">
+                    <div class="list-group list-group-flush">
+                        <h3 class="list-group-item">Category</h3>
+                        <div th:each="category : ${categories}">
+                            <a th:href="@{/vegetables(categoryId=${category.getCategoryID()})}"
+                               th:utext="${category.getName()}"
+                               class="list-group-item list-group-item-action">
+                                An item
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <form action="/vegetables/search" method="post" class="container mt-5 px-4 px-lg-2">
+                <div class="d-flex flex-column justify-content-center border border-secondary-subtle">
+                    <div class="list-group list-group-flush">
+                        <h3 class="list-group-item">Tìm kiếm nâng cao</h3>
+                        <h5 class="ms-3 fs-5 fw-semibold">Tìm kiếm theo tên</h5>
+                        <div class="d-flex ms-3 mb-2" role="search">
+                            <div class="">
+                                <div class="input-group">
+                                    <input
+                                            class="form-control border"
+                                            type="Search"
+                                            placeholder="Search"
+                                            name="name"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div th:each="category : ${categories}" class="ms-2 form-check">
+                            <input name="categoryId"
+                                   th:value="${category.getCategoryID()}"
+                                   class="form-check-input" type="checkbox">
+                            <label th:utext="${category.getName()}" class="form-check-label">
+                                Default checkbox
+                            </label>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Tìm kiếm" />
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="col-12 col-md-9">
+            <div class="px-4 px-lg-5 mt-5 ">
+                <div
+                        class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
+                >
+
+                    <div id="list-vegetable" th:each="vegetable : ${vegetables} " class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img
+                                    class="card-img-top"
+                                    th:src="@{'/' + ${vegetable.getImage()}}"
+                                    src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+                                    alt="..."
+                            />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 th:utext="${vegetable.getVegetableName()}" class="fw-bolder">
+                                        Fancy Product
+                                    </h5>
+                                    <!-- Product price-->
+                                    <span th:utext="${vegetable.getPriceFormat()} + 'đ'">$40.00</span>
+                                    <div>
+                                        <span class="fw-semibold">Tồn kho:</span>
+                                        <span th:utext="${vegetable.getAmount()}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <div class="d-flex justify-content-center mb-2 align-items-center">
+                                        <button class="minus-button mx-1 btn btn-primary"><i class="bi bi-dash-lg" style="font-size: 14px;"></i></button>
+                                        <div class="quantity mx-3 h-100 fs-4">1</div>
+                                        <button class="plus-button mx-1 btn btn-primary"><i class="bi bi-plus-lg" style="font-size: 14px;"></i></button>
+                                    </div>
+                                    <button th:if="${vegetable.getAmount() > 0}" th:attr="data-id=${vegetable.getVegetableID()}"
+                                            class="btn btn-outline-dark mt-auto add-to-cart">
+                                        Add to cart
+                                    </button>
+                                    <button th:if="${vegetable.getAmount() <= 0}" class="btn btn-outline-dark disabled mt-auto">
+                                        Hết hàng
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">
+            Copyright &copy; Your Website 2023
+        </p>
+    </div>
+</footer>
+
+<script>
+    // Listener for each add to cart button
+    const listVegetableButtonEle = document.querySelectorAll('#list-vegetable .add-to-cart');
+    for (const vegetableButtonEle of listVegetableButtonEle) {
+        const minusButton = vegetableButtonEle.parentNode.querySelector('.minus-button');
+        const plusButton = vegetableButtonEle.parentNode.querySelector('.plus-button');
+        const textQuantityEle = vegetableButtonEle.parentNode.querySelector('.quantity');
+
+        vegetableButtonEle.addEventListener('click', (e) => {
+            const id = e.target.dataset.id;
+            const quantity = textQuantityEle.innerHTML;
+            window.location.href = `/cart?vegetableId=${id}&quantity=${quantity}`;
+        })
+
+        minusButton.addEventListener('click', (e) => {
+            const number = parseInt(textQuantityEle.innerHTML) - 1;
+            textQuantityEle.innerHTML = number.toString();
+        })
+
+        plusButton.addEventListener('click', (e) => {
+            const number = parseInt(textQuantityEle.innerHTML) + 1;
+            textQuantityEle.innerHTML = number.toString();
+        })
+    }
+</script>
+
+</body>
+</html>
